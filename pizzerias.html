@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oscar Pizza's</title>
+  <meta name="keywords" content="pizzerias, pizzeria, precio, direccion, zona">
+    <meta name="descripcion" content="Pizzeria Oscar, le ofrece el servicio de entrega a domicilio
+    con gran variedad de ingrediente a tu gusto.">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" href="icono.png">
+  <link rel="stylesheet" href="pizza.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; 
+      padding: 20px;
+      background-image: url('pizzafondo.avif');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    .container {
+      max-width: 900px;
+      height: 1050px;
+      margin: auto;
+      background-image: url('fondoform.jpg'); /* Imagen de fondo */
+      background-size: cover;
+      color: aliceblue;
+    }
+    h1 {
+        text-align: center;
+        font-size: 50px;
+    }
+    .section {
+        margin-bottom:20px;
+        text-align: center;
+    }
+    .grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+    .option {
+      text-align: center;
+      cursor: pointer;
+      padding: 10px;
+      transition: transform 0.2s;
+    }
+    .option img {
+      width: 100px; 
+      height: 100px;
+      border-radius: 10px;
+      border: 2px solid transparent;
+    }
+    .option:hover, .option.selected {
+      transform: scale(1.1);
+      border: 2px solid #f39c12;
+    }
+    .price { font-weight: bold; }
+    .boton:hover{
+      background-color: greenyellow;
+      cursor: pointer;
+      transform: scale(1.1);
+    }
+    .total {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+    }
+  </style>
+  <script>
+    let total = 0;
+    // Almacenamos los totales de cada categoría
+    let selectedItems = { pizza: 0, size: 0, drinks: 0 };
+
+    function selectOption(element, type, price) {
+      if (!type) {
+        // Para el tamaño de la pizza (sin precio asignado en este ejemplo)
+        let siblings = element.parentElement.querySelectorAll('.option');
+        siblings.forEach(el => el.classList.remove('selected'));
+        if (element.classList.contains('selected')) {
+          element.classList.remove('selected');
+        } else {
+          element.classList.add('selected');
+        }
+      } else if (type === 'drinks') {
+        // Permite acumular múltiples selecciones para bebidas
+        if (element.classList.contains('selected')) {
+          element.classList.remove('selected');
+          selectedItems.drinks -= price;
+        } else {
+          element.classList.add('selected');
+          selectedItems.drinks += price;
+        }
+      } else if (type === 'pizza') {
+        // Solo se permite una selección para tipo de pizza, con toggle
+        if (element.classList.contains('selected')) {
+          element.classList.remove('selected');
+          selectedItems.pizza = 0;
+        } else {
+          document.querySelectorAll('.pizza').forEach(el => el.classList.remove('selected'));
+          element.classList.add('selected');
+          selectedItems.pizza = price;
+        }
+      }
+      calculateTotal();
+    }
+
+    function calculateTotal() {
+      total = selectedItems.pizza + selectedItems.size + selectedItems.drinks;
+      document.getElementById('total').innerText = `Total a pagar: $${total}`;
+    }
+
+    function realizarPedido() {
+      // Capturamos los datos del cliente
+      let cliente = document.getElementById("cliente").value;
+      let telefono = document.getElementById("telefono").value;
+      let direccion = document.getElementById("direccion").value;
+      let fechaPedido = document.querySelector('input[type=datetime-local]').value;
+      alert(`Cliente: ${cliente}\nTeléfono: ${telefono}\nDirección: ${direccion}\nTotal a pagar: $${total}\nFecha y hora del pedido: ${fechaPedido}`);
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Oscar Pizza's</h1>
+    <form>
+      <div class="section">
+        <label>Nombre del Cliente:</label>
+        <input type="text" id="cliente" required>
+        <label>Teléfono:</label>
+        <input type="tel" id="telefono" required>
+        <label>Dirección:</label>
+        <input type="text" id="direccion" required>
+      </div>
+      <div class="section">
+        <label>Tipo de Pizza:</label> <br> <br>
+        <div class="grid">
+          <div class="option pizza" onclick="selectOption(this, 'pizza', 150)">
+            <img src="pepe.png" alt="Peperoni">
+            <div>Peperoni - <span class="price">$150</span></div>
+          </div>
+          <div class="option pizza" onclick="selectOption(this, 'pizza', 160)">
+            <img src="hawai.png" alt="Hawaiana">
+            <div>Hawaiana - <span class="price">$160</span></div>
+          </div>
+          <div class="option pizza" onclick="selectOption(this, 'pizza', 160)">
+            <img src="mexi.png" alt="mexi">
+            <div>Mexicana - <span class="price">$160</span></div>
+          </div>
+          <div class="option pizza" onclick="selectOption(this, 'pizza', 160)">
+            <img src="vege.png" alt="vege">
+            <div>Vegetariana - <span class="price">$160</span></div>
+          </div>
+          <div class="option pizza" onclick="selectOption(this, 'pizza', 160)">
+            <img src="calzon.png" alt="Calzone">
+            <div>Calzone - <span class="price">$160</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <label>Tamaño de la Pizza:</label> <br> <br>
+        <div class="grid">
+          <div class="option size" onclick="selectOption(this)">
+            <img src="bandeja.png" alt="Chica">
+            <div>Chica</div>
+          </div>
+          <div class="option" onclick="selectOption(this)">
+            <img src="bandeja.png" alt="Mediana">
+            <div>Mediana</div>
+          </div>
+          <div class="option size" onclick="selectOption(this)">
+            <img src="bandeja.png" alt="Grande">
+            <div>Grande</div>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <label>Bebidas:</label> <br> <br>
+        <div class="grid">
+          <div class="option" onclick="selectOption(this, 'drinks', 12)">
+            <img src="pepsi.png" alt="Pepsi">
+            <div>Pepsi - <span class="price">$12</span></div>
+          </div>
+          <div class="option" onclick="selectOption(this, 'drinks', 12)">
+            <img src="coke.png" alt="Coca-Cola">
+            <div>Coca-Cola - <span class="price">$12</span></div>
+          </div>
+          <div class="option" onclick="selectOption(this, 'drinks', 20)">
+            <img src="boingcarton.jpg" alt="Boing">
+            <div>Boing - <span class="price">$20</span></div>
+          </div>
+          <div class="option" onclick="selectOption(this, 'drinks', 14)">
+            <img src="water.png" alt="Agua">
+            <div>Agua - <span class="price">$14</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid">
+        <div class="option" onclick="selectOption(this, 'drinks', 15)">
+          <img src="pepsi500.png" alt="Pepsi">
+          <div>Pepsi 500ml - <span class="price">$14</span></div>
+        </div>
+        <div class="option" onclick="selectOption(this, 'drinks', 15)">
+          <img src="coke500.png" alt="Coca-Cola">
+          <div>Coca-Cola 500ml - <span class="price">$15</span></div>
+        </div>
+        <div class="option" onclick="selectOption(this, 'drinks', 16)">
+          <img src="boingvidrio.png" alt="Boing">
+          <div>Boing Vidrio - <span class="price">$16</span></div>
+        </div>
+        <div class="option" onclick="selectOption(this, 'drinks', 24)">
+          <img src="narizona.png" alt="Agua">
+          <div>Arizona - <span class="price">$24</span></div>
+        </div>
+      </div>
+      <br>
+      <div class="section">
+        <label>Fecha y Hora del Pedido:</label>
+        <input type="datetime-local">
+      </div>
+      <div class="total" id="total">Total a pagar: $0</div>
+      <center> <br>
+        <button class="boton" type="button" onclick="realizarPedido()">Realizar Pedido</button>
+      </center>
+    </form>
+  </div>
+</body>
+</html>
